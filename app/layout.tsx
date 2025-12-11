@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Oswald, Nunito } from "next/font/google";
 import "./globals.css";
+import ThemeProvider from "@/theme/theme-provider";
+import { AuthProvider } from "@/context/authContext";
+import Providers from "@/context/queryProvider";
+import { NotificationProvider } from "@/context/NotificationProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const OswaldSans = Oswald({
+  variable: "--font-oswald",
+  weight: ["200", "300", "400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const MerriweatherSans = Nunito({
+  variable: "--font-nunito",
+  weight: ["400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
 });
 
@@ -23,11 +29,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${OswaldSans.variable} ${MerriweatherSans.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NotificationProvider>
+            <Providers>
+              <AuthProvider>
+                {children}
+              </AuthProvider>
+            </Providers>
+          </NotificationProvider>
+        </ThemeProvider>
+
       </body>
     </html>
   );
