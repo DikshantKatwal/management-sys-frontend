@@ -2,7 +2,7 @@
 
 import SlideNav from "@/components/Navbar/Navbar";
 import { SidebarProvider } from "@/components/Navbar/NavBarContext";
-import TopBar from "@/components/Tobbar";
+import TopBar from "@/components/Topbar";
 import { Send } from "lucide-react";
 
 export default function RootLayout({
