@@ -40,14 +40,19 @@ export default function DataTable({
         return () => clearTimeout(timer);
     }, [searchValue]);
 
+    const queryKeyFinal = debouncedSearch
+        ? [queryKey, debouncedSearch]
+        : [queryKey];
+
+
+
     const { data: rows, isLoading } = useQuery<any[]>({
-        queryKey: [queryKey, debouncedSearch],
+        queryKey: queryKeyFinal,
         queryFn: () =>
             apiService.get(
                 debouncedSearch ? `${url}?search=${debouncedSearch}` : url
             ),
     });
-
 
     const [mounted, setMounted] = useState(false);
 

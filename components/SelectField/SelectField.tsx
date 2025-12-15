@@ -99,6 +99,9 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                                 : "1px solid #302f2f", // lighter for dark mode
                     },
                 },
+                "& .MuiAutocomplete-endAdornment .MuiIconButton-root": {
+                    color: "var(--color-foreground, #ffffff)",
+                },
                 "& .MuiInputLabel-shrink": {
                     transform: "none !important",
                 },
@@ -113,21 +116,6 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                     borderRadius: "16px",
                 },
 
-                /* OPTIONS */
-                "& .MuiAutocomplete-option": {
-                    backgroundColor: "black",
-                    color: "var(--bg-foreground)",
-                    fontSize: 14,
-                    fontFamily: "Nunito, sans-serif",
-
-                    "&[aria-selected='true']": {
-                        backgroundColor: "color-mix(in srgb, var(--bg-background), #000 8%)",
-                    },
-
-                    "&.Mui-focused, &:hover": {
-                        backgroundColor: "color-mix(in srgb, var(--bg-background), #000 12%)",
-                    },
-                }
             }}
             renderInput={(params) => (
                 <TextField
@@ -143,6 +131,33 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                     }}
                 />
             )}
+            slotProps={{
+                paper: {
+                    sx: {
+                        backgroundColor: "var(--color-background, #ffffff)",
+                        color: "var(--color-light-active, #ffffff)",
+                        borderRadius: "12px",
+                        border: "2px solid var(--color-placeholder, #ffffff)"
+                    }
+                },
+                popper: {
+                    sx: {
+                        "& .MuiAutocomplete-option": {
+                            backgroundColor: "var(--color-background, #ffffff)",
+                            // color: "var(--color-foreground, #ffffff)",
+                            padding: "10px 12px",
+
+                            "&:not(:last-of-type)": {
+                                borderBottom: "1px solid var(--color-border, #ffffff)"
+                            },
+
+
+
+
+                        }
+                    }
+                }
+            }}
         />
     );
 };

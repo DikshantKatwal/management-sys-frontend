@@ -2,6 +2,7 @@
 
 import SlideNav from "@/components/Navbar/Navbar";
 import { SidebarProvider } from "@/components/Navbar/NavBarContext";
+import TopBar from "@/components/Tobbar";
 import { Send } from "lucide-react";
 
 export default function RootLayout({
@@ -12,11 +13,10 @@ export default function RootLayout({
     return (
         <div className="min-h-screen grid grid-rows-[40px_1fr] bg-theme-normal">
             {/* Top bar */}
-            <div className="flex gap-2 items-center px-4 font-semibold">
-                <Send size={15} />  Check-Ins
-            </div>
-            {/* Content */}
             <SidebarProvider>
+
+                <TopBar />
+                {/* Content */}
                 <div className="grid grid-cols-[auto_1fr] h-full">
                     <SlideNav />
                     <main className="min-w-0 flex">

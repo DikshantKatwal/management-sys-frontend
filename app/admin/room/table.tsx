@@ -7,102 +7,29 @@ import apiService from "@/lib/api";
 import Drawer from "@mui/material/Drawer";
 import {
     useMutation,
+    useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
 import { UUID } from "crypto";
 import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import AutoComplete from "@/components/SelectField/SelectField";
-import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import Skeleton from "@mui/material/Skeleton";
 
-
-const roomOptions = [
-    { id: "deluxe", label: "Deluxe" },
-    { id: "standard", label: "Standard" }
-]
 
 const statusOptions = [
-    { id: "active", label: "Active" },
-    { id: "inactive", label: "In-Active" },
-    { id: "booked", label: "Booked" },
-    { id: "dirty", label: "Dirty" },
+    { id: "available", label: "Available" },
+    { id: "occupied", label: "Occupied" },
+    { id: "out_of_order", label: "Out of order" },
+    { id: "cleaning", label: "Cleaning" },
 ]
-
-
-const columns = [
-    {
-        field: "name",
-        headerName: "Room Name",
-        flex: 1,
-        minWidth: 150,
-        resizable: true,
-    },
-    {
-        field: "type",
-        headerName: "Room Type",
-        minWidth: 130,
-        resizable: true,
-        renderCell: (params: GridRenderCellParams) => {
-            const type = roomOptions.find(
-                (item) => item.id === params.value
-            );
-            let bgColor = "bg-gray-300";
-            switch (params.value) {
-                case "deluxe":
-                    bgColor = "!bg-purple-500/20";
-                    break;
-                case "standard":
-                    bgColor = "!bg-stone-500/20";
-                    break;
-            }
-
-            return (
-                <span className={`px-2 py-1 rounded text-white text-xs font-medium ${bgColor}`}>
-                    {type?.label ?? params.value}
-                </span>
-            );
-        },
-    },
-    {
-        field: "status",
-        headerName: "Status",
-        flex: 1,
-        minWidth: 130,
-        renderCell: (params: GridRenderCellParams) => {
-            const status = statusOptions.find(
-                (item) => item.id === params.value
-            );
-
-            let bgColor = "bg-gray-300";
-
-            switch (params.value) {
-                case "active":
-                    bgColor = "!bg-green-500/20";
-                    break;
-                case "inactive":
-                    bgColor = "!bg-gray-400/20";
-                    break;
-                case "booked":
-                    bgColor = "!bg-blue-500/20";
-                    break;
-                case "dirty":
-                    bgColor = "!bg-red-500/20";
-                    break;
-            }
-
-            return (
-                <span className={`px-2 py-1 rounded text-white text-xs font-medium ${bgColor}`}>
-                    {status?.label ?? params.value}
-                </span>
-            );
-        },
-    }
-];
 
 type TRoom = {
     id?: UUID;
-    name: string;
-    type: string;
+    number: string;
+    room_type: string;
+    floor: string;
     sequence: number;
     status: string;
 }
@@ -115,7 +42,6 @@ type TRequest = {
 
 const useRoomMutation = () => {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: ({ method, url, data }: TRequest) =>
             apiService[method](url, data),
@@ -124,7 +50,87 @@ const useRoomMutation = () => {
     });
 };
 
+
 export default function RoomsTable() {
+    const { data: roomTypes = [] } = useQuery<any[]>({
+        queryKey: ['room-type'],
+        queryFn: () =>
+            apiService.get(
+                "/room/type"
+            ),
+    });
+
+    const roomTypeOptions = roomTypes.map((roomType) => ({
+        id: roomType.id,
+        label: roomType.name
+    }))
+
+    const columns = useMemo<GridColDef[]>(() => [
+        {
+            field: "number",
+            headerName: "Room Number",
+            flex: 1,
+            minWidth: 150,
+            resizable: true,
+        },
+        {
+            field: "room_type",
+            headerName: "Room Type",
+            minWidth: 130,
+            resizable: true,
+            valueGetter: (params: GridRenderCellParams) => {
+                const roomType = roomTypeOptions.find(
+                    (item) => item.id === params
+                );
+                return roomType?.label || <Skeleton />;
+            },
+            renderCell: (params: GridRenderCellParams) => (
+                <span className="text-xs font-medium">
+                    {params.value}
+                </span>
+            ),
+        },
+        {
+            field: "floor",
+            headerName: "Room Floor",
+            flex: 1,
+            minWidth: 150,
+            resizable: true,
+        },
+        {
+            field: "status",
+            headerName: "Status",
+            flex: 1,
+            minWidth: 130,
+            renderCell: (params: GridRenderCellParams) => {
+                const status = statusOptions.find(
+                    (item) => item.id === params.value
+                );
+                let bgColor = "bg-gray-300";
+                switch (params.value) {
+                    case "available":
+                        bgColor = "!bg-green-500/20";
+                        break;
+                    case "inactive":
+                        bgColor = "!bg-gray-400/20";
+                        break;
+                    case "booked":
+                        bgColor = "!bg-blue-500/20";
+                        break;
+                    case "dirty":
+                        bgColor = "!bg-red-500/20";
+                        break;
+                }
+                return (
+                    <span
+                        className={`px-2 py-1 rounded text-white text-xs font-medium ${bgColor}`}
+                    >
+                        {status?.label}
+                    </span>
+                );
+            },
+        },
+    ], [roomTypeOptions, statusOptions]);
     const [open, setOpen] = useState<boolean>(false)
 
     const [formData, setFormData] = useState<TRoom>({ status: "active" } as TRoom)
@@ -148,7 +154,7 @@ export default function RoomsTable() {
     const handleEditRoom = ({ row }: { row: TRoom }) => {
         setFormData({
             ...row,
-            type: row.type,
+            room_type: row.room_type,
         });
         setOpen(true);
     };
@@ -174,16 +180,16 @@ export default function RoomsTable() {
                         <div className="">
                             <div className=" p-2 flex flex-col gap-2 ">
                                 <TextField
-                                    label="Room Name"
-                                    name="name"
-                                    value={formData.name}
+                                    label="Room Number"
+                                    name="number"
+                                    value={formData.number}
                                     onChange={handleInputChange}
                                 />
                                 <AutoComplete
-                                    name="type"
+                                    name="room_type"
                                     label="Room Type"
-                                    options={roomOptions}
-                                    value={formData.type}
+                                    options={roomTypeOptions}
+                                    value={formData.room_type}
                                     onChange={handleInputChange}
                                 />
                                 <TextField
@@ -191,6 +197,12 @@ export default function RoomsTable() {
                                     type="number"
                                     name="sequence"
                                     value={formData.sequence}
+                                    onChange={handleInputChange}
+                                />
+                                <TextField
+                                    label="Room Floor"
+                                    name="floor"
+                                    value={formData.floor}
                                     onChange={handleInputChange}
                                 />
                                 <AutoComplete

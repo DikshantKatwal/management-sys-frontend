@@ -157,7 +157,7 @@ export default function CustomerCreateView() {
         mutate(
             {
                 method: formData.id ? 'put' : 'post',
-                url: formData.id ? `/customer/${formData.id}/` : '/customer/',
+                url: formData.id ? `/guestformData.id}/` : '/cusguest
                 data: formData,
             },
             { onSuccess: closeDrawer }
@@ -247,9 +247,9 @@ export default function CustomerCreateView() {
 
             </Drawer>
             <DataTable
-                queryKey="customers"
+                queryKey="guests"
                 title="Customer"
-                url="/customer/"
+                url="/guest/"
                 onRowClick={handleEditCustomer}
                 columns={columns}
                 buttonChildren={<><Plus fontSize="small" /> Add Customer</>}
