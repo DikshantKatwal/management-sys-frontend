@@ -81,7 +81,7 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                                 : "1px solid #302f2f", // lighter for dark mode
                     },
                 },
-
+                // MuiFormLabel-root
                 /* LABEL — fixed (no float) */
                 "& .MuiInputLabel-root": {
                     position: "absolute",
@@ -89,7 +89,7 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                     left: 8,
                     fontSize: 12,
                     fontFamily: "Nunito, sans-serif !important",
-                    color: "var(--color-placeholder, #9ca3af)",
+                    color: "var(--color-placeholder)",
                     transform: "none !important",
                     transition: "none !important",
                     "&.Mui-focused fieldset": {

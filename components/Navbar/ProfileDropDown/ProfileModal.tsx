@@ -27,6 +27,7 @@ type User = {
     last_name: string
     full_name: string
     user_type: string
+    phone: string
     employee: {
         role?: string;
         department?: string;
@@ -42,6 +43,7 @@ export interface ProfileFormData {
     last_name: string;
     full_name?: string;
     email: string;
+    phone: string;
     user_type?: string;
     role?: string;
     department?: string;
@@ -86,6 +88,7 @@ export function EditProfileDialog({
     useEffect(() => {
         setFormData({
             first_name: userData?.first_name || "",
+            phone: userData?.phone || "",
             last_name: userData?.last_name || "",
             email: userData?.email || "",
             role: userData?.employee?.role || "",
@@ -193,6 +196,14 @@ export function EditProfileDialog({
                         type="email"
                         disabled
                         value={formData.email}
+                        onChange={handleInputChange}
+                    />
+                    <TextField
+                        label="Phone"
+                        name="phone"
+                        type="phone"
+                        disabled
+                        value={formData.phone}
                         onChange={handleInputChange}
                     />
 

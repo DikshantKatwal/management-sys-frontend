@@ -7,12 +7,11 @@ import { FaGoogle } from "react-icons/fa";
 export default function Home() {
   return (
     <div className="min-h-screen font-oswald grid grid-rows-[auto_1fr_auto]">
-
-      <Button type="button">
-        <Link href="/login">
+      <Link href="/login">
+        <Button type="button">
           Login
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 }

@@ -6,9 +6,9 @@ import { Button } from "../ui/button";
 import TextField from "../TextField";
 import { Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import apiService from "@/lib/api";
-
+import React, { memo } from "react";
 
 type DataTableProps = {
     queryKey: string;
@@ -19,7 +19,8 @@ type DataTableProps = {
     onButtonClick: () => void;
 } & DataGridProps;
 
-export default function DataTable({
+
+const DataTable = ({
     queryKey,
     url,
     columns,
@@ -27,7 +28,7 @@ export default function DataTable({
     onButtonClick,
     title,
     ...dataGridProps
-}: DataTableProps) {
+}: DataTableProps) => {
     const [searchValue, setSearchValue] = useState<string>("")
 
     const [debouncedSearch, setDebouncedSearch] = useState(searchValue);
@@ -54,6 +55,27 @@ export default function DataTable({
             ),
     });
 
+
+    const DataTable = useMemo(() => {
+        return (
+            <DataGrid
+                {...dataGridProps}
+                rows={rows}
+                columns={columns}
+                pageSizeOptions={[5, 10, 20, 50, 100]}
+                loading={isLoading}
+                filterMode="server"
+                slotProps={{
+                    loadingOverlay: {
+                        variant: 'skeleton',
+                        noRowsVariant: 'skeleton',
+                    },
+                }}
+                disableRowSelectionOnClick
+            // density="compact"
+            />
+        )
+    }, [rows, columns])
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -61,6 +83,7 @@ export default function DataTable({
     }, []);
 
     if (!mounted) return null;
+
 
     return (
         <div className="flex flex-col gap-2">
@@ -93,23 +116,9 @@ export default function DataTable({
                 </div>
             </div>
             <div className="w-full h-[60vh] min-w-0 overflow-auto bg-white rounded-lg">
-                <DataGrid
-                    {...dataGridProps}
-                    rows={rows}
-                    columns={columns}
-                    pageSizeOptions={[5, 10, 20, 50, 100]}
-                    loading={isLoading}
-                    filterMode="server"
-                    slotProps={{
-                        loadingOverlay: {
-                            variant: 'skeleton',
-                            noRowsVariant: 'skeleton',
-                        },
-                    }}
-                    disableRowSelectionOnClick
-                // density="compact"
-                />
+                {DataTable}
             </div>
         </div>
     );
 }
+export default memo(DataTable)

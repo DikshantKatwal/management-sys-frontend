@@ -59,7 +59,7 @@ export default function SlideNav() {
                         icon={<Users size={18} />}
                         type="link"
                         link="/admin/guest"
-                        label="User" open={open} />
+                        label="Guest" open={open} />
                     <NavItem
                         icon={<IdCard size={18} />}
                         type="link"

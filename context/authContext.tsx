@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type LoginPayload = {
-    email: string;
+    username: string;
     password: string;
 };
 
@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
         })
     }
-
     const refreshAuth = async () => {
         const result = await parseAuthCookie();
         setIsAuthenticated(result);

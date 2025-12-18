@@ -18,7 +18,7 @@ export const LoginField = () => {
         e.preventDefault();
 
         const formData = {
-            email: username,
+            username,
             password,
         };
 

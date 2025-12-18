@@ -2,7 +2,7 @@
 
 import { onMessage } from "firebase/messaging";
 import React, { createContext, useContext, useEffect } from "react";
-import { generateToken, getFirebaseMessaging } from "@/firebase";
+// import { generateToken, getFirebaseMessaging } from "@/firebase";
 
 type NotificationContextType = {};
 
@@ -14,19 +14,19 @@ export const NotificationProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
-    useEffect(() => {
-        const init = async () => {
-            await generateToken();
+    // useEffect(() => {
+    //     const init = async () => {
+    //         await generateToken();
 
-            const messaging = await getFirebaseMessaging();
-            if (!messaging) return;
+    //         const messaging = await getFirebaseMessaging();
+    //         if (!messaging) return;
 
-            onMessage(messaging, (payload) => {
-                console.log("FCM foreground message ✅", payload);
-            });
-        };
-        init();
-    }, []);
+    //         onMessage(messaging, (payload) => {
+    //             console.log("FCM foreground message ✅", payload);
+    //         });
+    //     };
+    //     init();
+    // }, []);
 
     return (
         <NotificationContext.Provider value={{}}>

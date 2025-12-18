@@ -115,6 +115,7 @@ type TResponseData = {
     full_name?: string;
     avatar?: string | File
     email?: string;
+    phone?: number
     id?: UUID;
     user_type?: string;
     username?: string;
@@ -133,6 +134,7 @@ type TUser = {
     last_name: string
     full_name: string
     user_type: string
+    phone?: number
     employee: {
         role?: string;
         department?: string;
@@ -253,6 +255,10 @@ export default function EmployeeCreateView() {
                                 <TextField
                                     label="Contact Number"
                                     type="number"
+                                    name="phone"
+
+                                    value={formData.phone}
+
                                     onChange={handleInputChange}
                                 />
                             </div>
