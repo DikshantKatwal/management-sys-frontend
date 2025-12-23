@@ -3,7 +3,7 @@ export type TUser = {
   first_name: string;
   last_name: string;
   username: string;
-  avatar?: string;
+  avatar?: string | File;
   email: string;
   full_name: string;
   user_type: string;
@@ -11,8 +11,8 @@ export type TUser = {
 };
 
 export type TGuest = {
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   address?: string;
   dob?: string;
   nationality?: string;

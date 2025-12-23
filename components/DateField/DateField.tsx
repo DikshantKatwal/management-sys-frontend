@@ -6,32 +6,22 @@ import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { formatDate } from "@/lib/utils";
 
-interface TextFieldProps {
+interface DateFieldProps {
     label?: string;
-    name: string;
+    name?: string;
     value?: string | number | readonly string[] | undefined | any
     labelIcon?: ReactNode
     type?: HTMLInputTypeAttribute;
-    onChange?: ChangeEventHandler<HTMLInputElement>;
+    onChange?: any;
     className?: ClassNameValue
     textSize?: number
     disabled?: boolean
 }
 
-const TextField = ({ value = "", disabled, name, label = "Label", type = "text", onChange, labelIcon, className, textSize = 16 }: TextFieldProps) => {
+const DateField = ({ value = "", disabled, name, label = "Label", type = "text", onChange, labelIcon, className, textSize = 16 }: DateFieldProps) => {
     const [openDate, setOpenDate] = useState(false)
 
     if (type === "date") {
-        const parsedDate =
-            typeof value === "number"
-                ? new Date(value * 1000)
-                : typeof value === "string" && /^\d+$/.test(value)
-                    ? new Date(Number(value) * 1000)
-                    : value
-                        ? new Date(value)
-                        : undefined;
-
-
         return (
             <Fragment>
                 <Popover open={openDate} onOpenChange={setOpenDate}>
@@ -62,24 +52,23 @@ const TextField = ({ value = "", disabled, name, label = "Label", type = "text",
                         </button>
                     </PopoverTrigger>
 
-                    <PopoverContent sideOffset={8} className="w-auto p-0 z-1500" align="start">
+                    <PopoverContent className="w-auto p-0 z-50" align="start">
                         <Calendar
                             mode="single"
-
-                            selected={parsedDate}
+                            selected={value}
                             onSelect={(selectedDate) => {
-                                if (!selectedDate) return;
+                                if (!selectedDate) return
+
                                 const y = selectedDate.getFullYear()
                                 const m = String(selectedDate.getMonth() + 1).padStart(2, "0")
                                 const d = String(selectedDate.getDate()).padStart(2, "0")
-
+                                console.log(`dasdasd, ${y}-${m}-${d}`)
                                 onChange?.({
                                     target: {
                                         name,
-                                        value: `${y}-${m}-${d}`,
-                                    },
-                                } as React.ChangeEvent<HTMLInputElement>);
-                                setOpenDate(false);
+                                        value: `${y}-${m}-${d}`,   // 👈 send id
+                                    }
+                                });
                             }}
                             captionLayout="dropdown"
                         />
@@ -112,14 +101,14 @@ const TextField = ({ value = "", disabled, name, label = "Label", type = "text",
     );
 };
 
-export default TextField;
+export default DateField;
 
 
 
 // import { ChangeEventHandler, HTMLAttributes, HTMLInputTypeAttribute, ReactNode } from "react";
 // import { ClassNameValue, twMerge } from "tailwind-merge";
 
-// interface TextFieldProps {
+// interface DateFieldProps {
 //     label?: string;
 //     labelIcon?: ReactNode
 //     type?: HTMLInputTypeAttribute;
@@ -127,7 +116,7 @@ export default TextField;
 //     className?: ClassNameValue
 // }
 
-// const TextField = ({ label = "Label", type = "text", onChange, labelIcon, className }: TextFieldProps) => {
+// const DateField = ({ label = "Label", type = "text", onChange, labelIcon, className }: DateFieldProps) => {
 //     return (
 //         <div className={twMerge(
 //             `relative border border-inactive rounded-sm m-1 w-full has-[input:focus]:border-light-active/50 `,
@@ -147,4 +136,4 @@ export default TextField;
 //     );
 // };
 
-// export default TextField;
+// export default DateField;

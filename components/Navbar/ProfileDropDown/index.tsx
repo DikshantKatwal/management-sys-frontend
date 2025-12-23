@@ -32,6 +32,7 @@ type User = {
     last_name: string
     full_name: string
     user_type: string
+    phone: string
     employee: {
         role?: string;
         department?: string;

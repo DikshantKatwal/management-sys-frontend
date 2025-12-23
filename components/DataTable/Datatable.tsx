@@ -106,6 +106,7 @@ const DataTable = ({
             <div className=" flex justify-between ">
                 <div className="font-nunito font-semibold w-40">
                     <TextField
+                        name="search"
                         label="search"
                         labelIcon={<Search size={10} />}
                         className="h-10 w-60"

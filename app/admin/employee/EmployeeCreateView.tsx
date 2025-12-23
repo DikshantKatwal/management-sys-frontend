@@ -15,6 +15,7 @@ import { FormEvent, useState } from "react";
 import AutoComplete from "@/components/SelectField/SelectField";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { formatDate } from "@/lib/utils";
+import ImageViewer from "@/components/customUI/imageViewer";
 
 
 
@@ -115,6 +116,8 @@ type TResponseData = {
     full_name?: string;
     avatar?: string | File
     email?: string;
+    password?: string;
+    rePassword?: string;
     phone?: number
     id?: UUID;
     user_type?: string;
@@ -165,6 +168,7 @@ const useEmployeeMutation = () => {
 export default function EmployeeCreateView() {
     const [open, setOpen] = useState<boolean>(false)
     const [preview, setPreview] = useState<string | null>(null);
+    const [viewerImage, setViewerImage] = useState<string | null>(null)
 
     const [formData, setFormData] = useState<TResponseData>({} as TResponseData)
 
@@ -229,7 +233,11 @@ export default function EmployeeCreateView() {
     return (
         <>
             <Drawer color="black" anchor="right" open={open} onClose={closeDrawer}>
-                <form className="h-full overflow-x-hidden" onSubmit={handleSubmit}>
+                <ImageViewer
+                    image={viewerImage}
+                    onClose={() => setViewerImage(null)}
+                />
+                <form className="h-full" onSubmit={handleSubmit}>
                     <div className="bg-background text-foreground w-80 md:w-170 sm:120 font-nunito grid grid-rows-[50px_1fr_60px] h-full">
 
                         <div className="font-oswald border-b border-border p-2 flex items-center gap-2">
@@ -239,56 +247,30 @@ export default function EmployeeCreateView() {
                         <div className="p-2 flex-col flex gap-3">
                             <div className="flex items-center gap-3 my-4">
                                 <div className="flex-1 border-t" />
-                                <span className="px-2 text-sm text-muted-foreground">
+                                <span className="px-2 text-sm text-accent-foreground">
                                     Contact Information
                                 </span>
                                 <div className="flex-1 border-t" />
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                <TextField
-                                    label="Email"
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                />
-                                <TextField
-                                    label="Contact Number"
-                                    type="number"
-                                    name="phone"
 
-                                    value={formData.phone}
-
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-3 my-4">
-                                <div className="flex-1 border-t" />
-                                <span className="px-2 text-sm text-muted-foreground">
-                                    General Information
-                                </span>
-                                <div className="flex-1 border-t" />
-                            </div>
-
-
-
-                            <div className="grid  items-center md:grid-cols-[50px_auto_auto] gap-2">
-                                <div className="relative size-13 border border-inactive rounded-full flex items-center justify-center">
+                            <div className="grid grid-cols-[auto_1fr] gap-2">
+                                <div className="relative size-26 border border-muted-foreground rounded-sm flex items-center justify-center overflow-hidden">
                                     {preview ? (
                                         <img
                                             alt=""
+                                            onClick={() => setViewerImage(String(preview))}
+
                                             src={preview}
-                                            className="w-full h-full object-cover z-0 rounded-full"
+                                            className="w-full h-full object-cover z-0"
                                         />
                                     ) : (
-                                        <span className="text-xs text-muted-foreground rounded-full ">
+                                        <span className="text-xs text-muted-foreground ">
                                             <User />
                                         </span>
                                     )}
-                                    <label className="cursor-pointer bg-background border border-black p-1 rounded-full absolute -top-1 -right-1 z-10">
-                                        <Pen className="size-3" />
+                                    <label className="cursor-pointer  text-foreground hover:text-accent bg-muted-foreground p-1 rounded-[0_0_0_8] absolute top-0 right-0 z-10">
 
+                                        {preview ? <Pen className="size-4" /> : <Plus className="size-4" />}
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -297,6 +279,53 @@ export default function EmployeeCreateView() {
                                         />
                                     </label>
                                 </div>
+                                <div className="grid grid-rows-2 gap-2">
+                                    <TextField
+                                        label="Email"
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                    />
+                                    <TextField
+                                        label="Contact Number"
+                                        type="number"
+                                        name="phone"
+
+                                        value={formData.phone}
+
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <TextField
+                                    label="Password"
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                />
+                                <TextField
+                                    label="Re Password"
+                                    type="password"
+                                    name="rePassword"
+                                    value={formData.rePassword}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+
+                            <div className="flex items-center gap-3 my-4">
+                                <div className="flex-1 border-t" />
+                                <span className="px-2 text-sm text-accent-foreground">
+                                    General Information
+                                </span>
+                                <div className="flex-1 border-t" />
+                            </div>
+
+                            <div className="grid  items-center md:grid-cols-2 gap-2">
                                 <TextField
                                     label="First Name"
                                     type="text"
@@ -312,19 +341,9 @@ export default function EmployeeCreateView() {
                                     onChange={handleInputChange}
                                 />
                             </div>
-                            {/* <div className="grid grid-cols-1 gap-2">
-                                <TextField
-                                    label="Address"
-                                    type="text"
-                                    name="address"
-                                    value={formData.sequence}
-                                    onChange={handleInputChange}
-                                />
-
-                            </div> */}
                             <div className="flex items-center gap-3 my-4">
                                 <div className="flex-1 border-t" />
-                                <span className="px-2 text-sm text-muted-foreground">
+                                <span className="px-2 text-sm text-accent-foreground">
                                     Designation Information
                                 </span>
                                 <div className="flex-1 border-t" />
@@ -361,6 +380,7 @@ export default function EmployeeCreateView() {
                                 />
                             </div>
                         </div>
+
 
                         <div className="flex justify-between p-3">
                             <Button onClick={closeDrawer} variant="ghost">

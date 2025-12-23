@@ -71,6 +71,12 @@ export default function SlideNav() {
                         type="link"
                         link="/admin/check-in"
                         label="Check Ins" open={open} />
+
+                    <NavItem
+                        icon={<CheckCheck size={18} />}
+                        type="link"
+                        link="/admin/reservation"
+                        label="Reservation" open={open} />
                     <NavItem icon={<FileText size={18} />} label="Notes" open={open} />
                 </nav>
                 <nav className="p-1 py-2 sm:p-2">
