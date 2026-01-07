@@ -145,7 +145,7 @@ export function EditProfileDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[480px] space-y-6">
+            <DialogContent className="sm:max-w-[380px] lg:max-w-[480px] h-[90vh]">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold">
                         Edit Profile
@@ -155,8 +155,8 @@ export function EditProfileDialog({
                     </DialogDescription>
                 </DialogHeader>
 
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                    {/* Avatar Upload */}
+                <form className="space-y-3 lg:space-y-6  overflow-y-scroll scrollbar-hide" onSubmit={handleSubmit}>
+
                     <div className="flex flex-col items-center gap-3">
                         <div className="w-24 h-24  relative overflow-hidden flex items-center justify-center">
                             {preview ? (

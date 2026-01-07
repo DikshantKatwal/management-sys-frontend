@@ -91,7 +91,7 @@ const TextField = ({ value = "", disabled, name, label = "Label", type = "text",
     return (
 
         <div className={twMerge(
-            `relative border h-12  ${disabled ? "border-inactive/10 text-foreground/50" : "border-inactive"} rounded-sm  w-full has-[input:focus]:border-light-active/50 `,
+            `relative border h-12  ${disabled ? "border-inactive/70 text-foreground/60" : "border-foreground/70"} rounded-sm  w-full has-[input:focus]:border-light-active/50 `,
             className
         )}>
             <input
@@ -104,7 +104,7 @@ const TextField = ({ value = "", disabled, name, label = "Label", type = "text",
                 style={{ fontSize: textSize }}
                 className={`peer absolute bottom-0 pr-2 mb-1 pt-3 pl-1 left-0 outline-none w-full bg-transparent ${disabled ? "cursor-not-allowed" : ""}`}
             />
-            <label className="flex items-center text-[12px] absolute text-placeholder top-0 left-1 transition-colors peer-focus:text-light-active">
+            <label className="flex items-center text-[12px] absolute text-light-active top-0 left-1 transition-colors peer-focus:text-accent-foreground">
                 {labelIcon}
                 {label}
             </label>

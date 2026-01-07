@@ -21,7 +21,7 @@ export default function NavItem({
     const router = useRouter();
     return (
         <div onClick={type == "button" ? onClick : type == "link" && link ? () => router.push(link) : undefined} className="flex items-center py-1 rounded cursor-pointer">
-            <Button variant="ghost" className="gap-3 w-full justify-start">
+            <Button variant="ghost" className="gap-2 md:gap-3 w-full justify-start max-md:pl-1!">
                 {icon}
                 <span className={`${open ? "block" : "hidden"} transition-all duration-300`}>
                     {label}

@@ -1,33 +1,38 @@
 
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, {
+    AutocompleteProps,
+} from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { ChangeEventHandler } from "react";
-type TOption = {
+type Option = {
     id: any;
     label: string;
 };
 
-type TSelectChangeEvent = {
-    target: {
-        name: string;
-        value: TOption | null;
-    };
-};
-
-
 type TSelect = {
-    label: string,
-    name: string,
-    options: { id: any; label: string }[],
+    label?: string;
+    name: string;
+    options: Option[];
+    value: any;
     onChange?: any;
-    value: any,
-}
-const AutoComplete = ({ name = "", value, label = "Label", options = [], onChange = undefined }: TSelect) => {
+} & Omit<
+    AutocompleteProps<Option, false, false, false>,
+    "options" | "value" | "onChange" | "renderInput"
+>;
+// type TSelect = {
+//     params?: any
+//     label: string,
+//     name: string,
+//     options: { id: any; label: string }[],
+//     onChange?: any;
+//     value: any,
+// }
+const AutoComplete = ({ name = "", value, label = "Label", options = [], onChange = undefined, ...params }: TSelect) => {
     const selectedOption =
         options.find(opt => opt.id === value) ?? null;
 
     return (
-        <Autocomplete
+        <Autocomplete<Option, false, false, false>
+            {...params}
             disablePortal
             value={selectedOption}
             options={options}
@@ -107,7 +112,6 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                 },
                 "& .MuiInputBase-input": {
                     color: "var(--color-foreground, #ffffff)",
-
                 },
 
                 "& .MuiAutocomplete-paper": {
@@ -121,6 +125,7 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                 <TextField
                     {...params}
                     name={name}
+
                     label={label}
                     variant="outlined"
                     InputLabelProps={{ shrink: false }}
@@ -144,16 +149,12 @@ const AutoComplete = ({ name = "", value, label = "Label", options = [], onChang
                     sx: {
                         "& .MuiAutocomplete-option": {
                             backgroundColor: "var(--color-background, #ffffff)",
-                            // color: "var(--color-foreground, #ffffff)",
+                            color: "var(--color-foreground, #ffffff)",
                             padding: "10px 12px",
 
                             "&:not(:last-of-type)": {
                                 borderBottom: "1px solid var(--color-border, #ffffff)"
                             },
-
-
-
-
                         }
                     }
                 }

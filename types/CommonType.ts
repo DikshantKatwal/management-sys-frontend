@@ -16,6 +16,7 @@ export type TGuest = {
   address?: string;
   dob?: string;
   nationality?: string;
+  province?: string;
   identification?: string;
   id_number?: string;
 };

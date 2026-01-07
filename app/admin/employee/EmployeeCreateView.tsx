@@ -7,6 +7,7 @@ import apiService from "@/lib/api";
 import Drawer from "@mui/material/Drawer";
 import {
     useMutation,
+    useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
 import { UUID } from "crypto";
@@ -119,6 +120,12 @@ type TResponseData = {
     password?: string;
     rePassword?: string;
     phone?: number
+    country?: string;
+    province?: string;
+    city?: string;
+    address_line_1?: string;
+    address_line_2?: string;
+    postal_code?: string;
     id?: UUID;
     user_type?: string;
     username?: string;
@@ -143,6 +150,12 @@ type TUser = {
         department?: string;
         position?: string;
         hire_date?: string;
+        country?: string;
+        province?: string;
+        city?: string;
+        address_line_1?: string;
+        address_line_2?: string;
+        postal_code?: string;
     } | null
     avatar?: string;
 
@@ -172,6 +185,29 @@ export default function EmployeeCreateView() {
 
     const [formData, setFormData] = useState<TResponseData>({} as TResponseData)
 
+
+    const { data: countryData, isLoading } = useQuery<any[]>({
+        queryKey: ["country"],
+        queryFn: () =>
+            apiService.get("/utilities/country/"),
+    });
+
+    const { data: zoneData, isEnabled } = useQuery<any[]>({
+        queryKey: ["zone"],
+        enabled: !!formData?.country,
+        queryFn: () =>
+            apiService.get(`/utilities/zone/?country=${formData.country}`),
+    });
+
+    const countryOptions = countryData?.map((country) => ({
+        id: country.id,
+        label: country.country_name
+    })) || []
+
+    const zoneOptions = zoneData?.map((zone) => ({
+        id: zone.id,
+        label: zone.name
+    })) || []
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
@@ -239,11 +275,9 @@ export default function EmployeeCreateView() {
                 />
                 <form className="h-full" onSubmit={handleSubmit}>
                     <div className="bg-background text-foreground w-80 md:w-170 sm:120 font-nunito grid grid-rows-[50px_1fr_60px] h-full">
-
                         <div className="font-oswald border-b border-border p-2 flex items-center gap-2">
                             Add Employee
                         </div>
-
                         <div className="p-2 flex-col flex gap-3">
                             <div className="flex items-center gap-3 my-4">
                                 <div className="flex-1 border-t" />
@@ -252,7 +286,6 @@ export default function EmployeeCreateView() {
                                 </span>
                                 <div className="flex-1 border-t" />
                             </div>
-
                             <div className="grid grid-cols-[auto_1fr] gap-2">
                                 <div className="relative size-26 border border-muted-foreground rounded-sm flex items-center justify-center overflow-hidden">
                                     {preview ? (
@@ -269,7 +302,6 @@ export default function EmployeeCreateView() {
                                         </span>
                                     )}
                                     <label className="cursor-pointer  text-foreground hover:text-accent bg-muted-foreground p-1 rounded-[0_0_0_8] absolute top-0 right-0 z-10">
-
                                         {preview ? <Pen className="size-4" /> : <Plus className="size-4" />}
                                         <input
                                             type="file"
@@ -291,9 +323,7 @@ export default function EmployeeCreateView() {
                                         label="Contact Number"
                                         type="number"
                                         name="phone"
-
                                         value={formData.phone}
-
                                         onChange={handleInputChange}
                                     />
                                 </div>
@@ -349,7 +379,6 @@ export default function EmployeeCreateView() {
                                 <div className="flex-1 border-t" />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-
                                 <AutoComplete
                                     label="Role"
                                     name="role"
@@ -379,9 +408,62 @@ export default function EmployeeCreateView() {
                                     onChange={handleInputChange}
                                 />
                             </div>
+
+                            <div className="flex items-center gap-3 my-4">
+                                <div className="flex-1 border-t" />
+                                <span className="px-2 text-sm text-accent-foreground">
+                                    Address Information
+                                </span>
+                                <div className="flex-1 border-t" />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <AutoComplete
+                                    name="nationality"
+                                    label="Country"
+                                    options={countryOptions}
+                                    value={formData.country}
+                                    onChange={handleInputChange}
+                                />
+                                <AutoComplete
+                                    noOptionsText="Select country first"
+                                    disabled={!isEnabled}
+                                    name="province"
+                                    label="Province"
+
+                                    options={zoneOptions}
+                                    value={formData.province}
+                                    onChange={handleInputChange}
+                                />
+                                <TextField
+                                    label="Postal Code"
+                                    type="text"
+                                    name="postal_code"
+                                    value={formData.postal_code}
+                                    onChange={handleInputChange}
+                                />
+                                <TextField
+                                    label="City"
+                                    type="text"
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleInputChange}
+                                />
+                                <TextField
+                                    label="Adress Line 1"
+                                    type="text"
+                                    name="address_line_1"
+                                    value={formData.address_line_1}
+                                    onChange={handleInputChange}
+                                />
+                                <TextField
+                                    label="Adress Line 2"
+                                    type="text"
+                                    name="address_line_2"
+                                    value={formData.address_line_2}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
                         </div>
-
-
                         <div className="flex justify-between p-3">
                             <Button onClick={closeDrawer} variant="ghost">
                                 Cancel
@@ -390,7 +472,6 @@ export default function EmployeeCreateView() {
                                 {isPending ? "Saving..." : formData.id ? "Update" : "Add"}
                             </Button>
                         </div>
-
                     </div>
                 </form>
 

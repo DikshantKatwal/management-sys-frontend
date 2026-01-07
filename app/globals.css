@@ -15,6 +15,10 @@
 		--placeholder: rgb(110, 110, 110);
 		--hover-background: rgba(55, 53, 47, 0.06);
 		--active-background: rgba(55, 53, 47, 0.16);
+		/* --theme-dark: rgb(37, 72, 145);
+		--theme-normal: rgb(37, 72, 145);
+		--theme-light: rgb(37, 72, 145); */
+
 		--theme-dark: rgb(240, 192, 48);
 		--theme-normal: rgb(238, 194, 63);
 		--theme-light: rgb(243, 214, 129);
@@ -175,6 +179,23 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+
+	.light-gradient {
+		@apply bg-[#FEFAE0];
+	}
+
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+
+
 }
 
 

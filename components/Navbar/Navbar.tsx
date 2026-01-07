@@ -20,7 +20,7 @@ export default function SlideNav() {
             `}
         ><div className="h-full grid grid-rows-[1fr_auto]">
 
-                <nav className="p-1 py-2 sm:p-2">
+                <nav className="p-1 py-2 md:p-2">
                     <div className="sm:block hidden">
                         <NavItem
                             icon={open ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
@@ -69,8 +69,8 @@ export default function SlideNav() {
                     <NavItem
                         icon={<CheckCheck size={18} />}
                         type="link"
-                        link="/admin/check-in"
-                        label="Check Ins" open={open} />
+                        link="/admin/stay"
+                        label="Stay" open={open} />
 
                     <NavItem
                         icon={<CheckCheck size={18} />}

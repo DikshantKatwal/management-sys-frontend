@@ -7,6 +7,7 @@ import apiService from "@/lib/api";
 import Drawer from "@mui/material/Drawer";
 import {
     useMutation,
+    useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
 import { Pen, Plus, User } from "lucide-react";
@@ -15,7 +16,6 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { TGuest, TUser } from "@/types/CommonType";
 import { formatDate } from "@/lib/utils";
 import AutoComplete from "@/components/SelectField/SelectField";
-import { Calendar } from "@/components/ui/calendar";
 import ImageViewer from "@/components/customUI/imageViewer";
 
 const identificationType = [
@@ -42,6 +42,31 @@ type TRequest = {
 
 
 export default function GuestCreateView() {
+    const [formData, setFormData] = useState<TUnifiedGuestUserRes>({} as TUnifiedGuestUserRes)
+
+    const { data: countryData, isLoading } = useQuery<any[]>({
+        queryKey: ["country"],
+        queryFn: () =>
+            apiService.get("/utilities/country/"),
+    });
+
+    const { data: zoneData, isEnabled } = useQuery<any[]>({
+        queryKey: ["zone"],
+        enabled: !!formData?.nationality,
+        queryFn: () =>
+            apiService.get(`/utilities/zone/?country=${formData.nationality}`),
+    });
+
+    const countryOptions = countryData?.map((country) => ({
+        id: country.id,
+        label: country.country_name
+    })) || []
+
+    const zoneOptions = zoneData?.map((zone) => ({
+        id: zone.id,
+        label: zone.name
+    })) || []
+
     const [open, setOpen] = useState<boolean>(false)
     const [preview, setPreview] = useState<string | File | undefined>(undefined);
 
@@ -162,7 +187,6 @@ export default function GuestCreateView() {
     ], []);
 
 
-    const [formData, setFormData] = useState<TUnifiedGuestUserRes>({} as TUnifiedGuestUserRes)
 
     const [viewerImage, setViewerImage] = useState<string | null>(null)
 
@@ -226,7 +250,7 @@ export default function GuestCreateView() {
                     image={viewerImage}
                     onClose={() => setViewerImage(null)}
                 />
-                <form className="h-full" onSubmit={handleSubmit}>
+                <form className="" onSubmit={handleSubmit}>
                     <div className="bg-background text-foreground w-110 md:w-170 font-nunito grid grid-rows-[50px_1fr_60px] h-full">
 
                         <div className="font-oswald border-b border-border p-2 flex items-center gap-2">
@@ -310,13 +334,31 @@ export default function GuestCreateView() {
                                 />
                             </div>
                             <div className="grid grid-cols-1 gap-2">
+                                <AutoComplete
+                                    name="nationality"
+                                    label="Country"
+                                    options={countryOptions}
+                                    value={formData.nationality}
+                                    onChange={handleInputChange}
+                                />
+                                <AutoComplete
+                                    noOptionsText="Select country first"
+                                    disabled={!isEnabled}
+                                    name="province"
+                                    label="Province"
+
+                                    options={zoneOptions}
+                                    value={formData.province}
+                                    onChange={handleInputChange}
+                                />
+                                {/*                                 
                                 <TextField
                                     label="Address"
                                     type="text"
                                     name="address"
                                     value={formData.address}
                                     onChange={handleInputChange}
-                                />
+                                /> */}
                                 <TextField
                                     label="Date of Birth"
                                     type="date"
